@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: reset-repository
+        run: |
+          git config --global user.name "timetraveler"
+          git config --global user.email "timetraveler@github.com"
+          git rm -r --cached .
+          git commit -m "Remove old resume"
+          git switch --orphan update
+          git add .
+          git commit -m "Update"
+          git branch -D main
+          git branch -m main
+          git push origin +main:main
